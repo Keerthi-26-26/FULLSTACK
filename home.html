@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        .container1 {
+          height: 25rem;
+          width: 20rem;
+          background-color:rgba(0, 0, 0, 0.129);
+          color: white;
+          text-align: center;
+          padding-top: 12px;
+          border-radius: 16px;
+          border: 2px solid rgb(14, 43, 1);
+        }
+      </style>
+    </head>
+  <body>
+<div class="text-center"style="background-image:url(https://live.staticflickr.com/19/94445241_f92bf06c79_n.jpg);background-repeat:no-repeat;background-size:cover">
+    <div class="container" style="border-radius:12px ;">
+        <br>
+        <br><br><br><br>
+        <h3 style="color:black ;"><b>CLIMATE COUNTS</b></h3>
+    <br>
+    <p style="color:black;">Click the button to get your coordinates</p>
+
+    <button onclick="getLocation()"class="btn btn-success rounded-pill">Get</button></div>
+<br>
+<p id="demo"></p><center>
+<div class="container1">
+    <div class="icon">---</div>
+    <br>
+    Temperature of your location is
+    <div class="temp">-°C</div>
+    <div class="summary">----</div>
+    <div class="location"></div>
+  </div>
+</center>
+<script>
+var x = document.getElementById("demo");
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+function showPosition(position) {
+  x.innerHTML = "Latitude: " + position.coords.latitude + 
+  "<br>Longitude: " + position.coords.longitude;
+}
+// Declaring the variables
+let lon;
+let lat;
+let temperature = document.querySelector(".temp");
+let summary = document.querySelector(".summary");
+let loc = document.querySelector(".location");
+let icon = document.querySelector(".icon");
+const kelvin = 273;
+window.addEventListener("load", () => {
+if (navigator.geolocation) {
+	navigator.geolocation.getCurrentPosition((position) => {
+	console.log(position);
+	lon = position.coords.longitude;
+	lat = position.coords.latitude;
+	// API ID
+	const api = "8ecef2ec85b48ede21a6773a120a9656";
+	// API URL
+	const base =
+`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&` +
+`lon=${lon}&appid=6d055e39ee237af35ca066f35474e9df`;
+	// Calling the API
+	fetch(base)
+		.then((response) => {
+		return response.json();
+		})
+		.then((data) => {
+		console.log(data);
+		temperature.textContent =
+			Math.floor(data.main.temp - kelvin) + "°C";
+		summary.textContent = data.weather[0].description;
+		loc.textContent = data.name + "," + data.sys.country;
+		let icon1 = data.weather[0].icon;
+		icon.innerHTML =
+			`<img src="https://i.pinimg.com/originals/64/b8/5e/64b85e578e12519cf788b4594178b0f5.jpg" style="width:250px;height:200px;border-radius:20px">`;
+		});
+	});
+}
+});
+</script>
+<br>
+<br>
+<br>
+<br>
+</div>
+</body>
+</html>
